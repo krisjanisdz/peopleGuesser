@@ -1,0 +1,65 @@
+h1 {
+    font-family: "Freeman", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 120px;
+}
+
+div {
+    font-family: "Freeman", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 24px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.container > * {
+    margin-bottom: 10px; 
+}
+
+#result {
+    margin-top: 25px; 
+    margin-bottom: 25px;
+}
+
+#output {
+    align-items: center;
+}
+
+#nameBtn{
+    margin-top: 20px;
+}
+
+button {
+    font-family: "Freeman"; 
+    font-style: normal;
+    font-size: 20px;
+    border-radius: 12px;
+}
+
+#guessInput {
+    border-radius: 12px;
+    font-family: "Freeman";
+    font-style: normal;
+    font-size: 20px;
+    
+}
+
+.dropdown-item {
+    padding: 8px 12px; /* Add padding to the dropdown items */
+    cursor: pointer; /* Change cursor to pointer when hovering over dropdown items */
+    border-radius: 12px;
+    text-align: center;
+}
+
+.dropdown-item:hover {
+    background-color: antiquewhite; /* Change background color of dropdown item on hover */
+}
+
