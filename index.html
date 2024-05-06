@@ -27,6 +27,13 @@
 
     </div>
 
-    <script src="render.js"></script>
+    <script type="module">
+        import { handleInput, checkName, newGame } from './render.js';
+
+        // This makes the imported functions available in the global scope
+        window.handleInput = handleInput;
+        window.checkName = checkName;
+        window.newGame = newGame;
+    </script>
 </body>
 </html>
