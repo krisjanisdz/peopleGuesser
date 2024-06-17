@@ -66,15 +66,6 @@ function createAndAddPersona(name, birthYear, occupation, interests, gender) {
     persArray.push(newPersona);
 }
 
-createAndAddPersona("Edgars test", 1979, "president", "insta, svetdiena, dzivnieki", "vīrietis");
-createAndAddPersona("Pauls test", 2006, "cousin", "volejbols, cars", "vīrietis");
-createAndAddPersona("Edvins test", 1999, "cousin", "treneris, 28.vsk", "vīrietis");
-createAndAddPersona("Kristaps test", 1990, "crypto-king", "crypto, basketbols", "vīrietis");
-createAndAddPersona("Laura test", 1985, "doctor", "reading, hiking", "sieviete");
-createAndAddPersona("Anna test", 1990, "software engineer", "coding, gaming", "sieviete");
-createAndAddPersona("Mark test", 1982, "teacher", "music, gardening", "vīrietis");
-createAndAddPersona("Sandra test", 1988, "architect", "traveling, photography", "sieviete");
-createAndAddPersona("Robert test", 1978, "chef", "cooking, painting", "vīrietis");
 createAndAddPersona("Kristaps Porziņģis", 1995, "basketball player", "basketball', cars", "vīrietis");
 createAndAddPersona("Solvita Āboltiņa", 1963, "diplomat", "latvia, politics, EU, Italy", "sieviete");
 createAndAddPersona("Guntis Ulmanis", 1942, "politician", "latvia, history, agriculture", "vīrietis");

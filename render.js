@@ -3,12 +3,15 @@ import { persArray } from './personas.js';
 let randomIndex;
 let choosenPers;
 let guessCount;
-let hardMode = true;
+export let hardMode = false; 
 let guessedList = "";
+let guessedNames = new Set(); 
 
-export function changeMode (){
-
+export function changeMode() {
+    hardMode = !hardMode;
+    //console.log(`Hard mode is now ${hardMode ? 'enabled' : 'disabled'}`);
 }
+
 export function newGame() {
     randomIndex = Math.floor(Math.random() * persArray.length);
     choosenPers = persArray[randomIndex];
@@ -17,13 +20,19 @@ export function newGame() {
     resetFeedback();
     document.getElementById("result").textContent = "";
     guessCount = 0;
+    guessedList = ""; 
+    guessedNames.clear(); 
     resetList();
     enableGameControls();
+    enableGameModeToggle();
 }
 
-function resetList (){
+function resetList() {
     document.getElementById("previousGuesses").innerHTML = "";
     document.getElementById("listName").style.display = "none";
+    const dropdown = document.getElementById("dropdown");
+    dropdown.innerHTML = "";
+    dropdown.style.display = "none"; 
 }
 
 function resetGuessInput() {
@@ -34,25 +43,40 @@ function resetFeedback() {
     document.getElementById("output").innerHTML = "";
 }
 
+function disableGameModeToggle() {
+    const gameModeToggle = document.querySelector('.switch input');
+    gameModeToggle.disabled = true;
+}
+
+function enableGameModeToggle() {
+    const gameModeToggle = document.querySelector('.switch input');
+    gameModeToggle.disabled = false;
+}
+
 export function checkName() {
+    disableGameModeToggle();
     const guessInput = document.getElementById("guessInput");
     const resultDiv = document.getElementById("result");
     const outputDiv = document.getElementById("output");
     const attempted = document.getElementById("previousGuesses");
+    const dropdown = document.getElementById("dropdown");
 
     const guess = guessInput.value.toLowerCase();
+
     if (guess === choosenPers.GetName().toLowerCase()) {
         resultDiv.textContent = `Congratulations! You guessed correctly in ${guessCount + 1} guesses`;
         outputDiv.innerHTML = "";
-        disableGameControls(); 
+        disableGameControls();
         resetGuessInput();
         resetFeedback();
         resetList();
-        winner();
+        dropdown.innerHTML = "";
+        dropdown.style.display = "none"; 
+        enableGameModeToggle();
     } else {
         if (guessCount >= 10) {
             resultDiv.textContent = "You've used all your guesses. Game over!";
-            disableGameControls(); 
+            disableGameControls();
             resetGuessInput();
             resetFeedback();
             resetList();
@@ -68,12 +92,17 @@ export function checkName() {
             const person = persArray[matchedIndex];
             guessedList += `${person.GetName()} <br>`;
             attempted.innerHTML = guessedList;
+            guessedNames.add(guess); 
             resetGuessInput();
             updateFeedback(matchedIndex);
             guessCount++;
             document.getElementById("listName").style.display = "block";
         }
     }
+}
+
+function gameMode() {
+    hardMode = !hardMode;
 }
 
 function disableGameControls() {
@@ -92,9 +121,6 @@ function enableGameControls() {
     nameBtn.disabled = false; 
 }
 
-function winner() {
-    confetti.render();
-}
 
 function updateFeedback(matchedIndex) {
     const outputDiv = document.getElementById("output");
@@ -106,46 +132,61 @@ function updateFeedback(matchedIndex) {
     const person = persArray[matchedIndex];
     const personYear = person.GetYear();
     const personProfession = person.GetProfession();
-    
-    
-    if(guessCount < 2 || hardMode === false){
+
+    if (guessCount < 2 && hardMode === false) {
         if (person.GetGender() === choosenPers.GetGender()) {
             outputText += "Gender is the same ✅<br>";
         } else {
             outputText += "Gender is not the same ❌<br>";
         }
-    }else{
+    } else if (guessCount >= 2 && hardMode === false) {
         outputText += `Person's gender: ${choosenPers.GetGender()} <br>`;
     }
+    else{
+        if (person.GetGender() === choosenPers.GetGender()) {
+            outputText += "Gender is the same ✅<br>";
+        } else {
+            outputText += "Gender is not the same ❌<br>";
+        }
+    }
 
-    if(guessCount < 4 || hardMode === false){
-        if (personYear > choosenYear ) {
+    if (guessCount < 4 && hardMode === false) {
+        if (personYear > choosenYear) {
             outputText += "Person is older 👵<br>";
         } else if (personYear < choosenYear) {
             outputText += "Person is younger 👶<br>";
         } else {
             outputText += "Person is the same age 🦸‍♂️<br>";
         }
-    }else{
+    } else if (guessCount >= 4 && hardMode === false) {
         outputText += `Person's birth year: ${choosenPers.GetYear()} <br>`;
     }
+    else{
+        if (personYear > choosenYear) {
+            outputText += "Person is older 👵<br>";
+        } else if (personYear < choosenYear) {
+            outputText += "Person is younger 👶<br>";
+        } else {
+            outputText += "Person is the same age 🦸‍♂️<br>";
+        }
+    }
 
-    if(guessCount < 7 || hardMode === false){
+    if (guessCount < 7 && hardMode === false) {
         if (personProfession === choosenProfession) {
             outputText += `They both work as ${personProfession} ✅<br>`;
         } else {
             outputText += `Not a/an ${personProfession} ❌<br>`;
         }
-    }else{
+    } else if (guessCount < 7 && hardMode === false) {
         outputText += `Person's profession: ${choosenPers.GetProfession()}<br>`;
     }
-
-    if(guessCount > 7 || hardMode !== false){
-        
-    }else{
-        outputText += `Person's quote: ${choosenPers.GetQuotes()}<br>`;
+    else{
+        if (personProfession === choosenProfession) {
+            outputText += `They both work as ${personProfession} ✅<br>`;
+        } else {
+            outputText += `Not a/an ${personProfession} ❌<br>`;
+        }
     }
-
 
     outputDiv.innerHTML = outputText;
 }
@@ -158,10 +199,11 @@ export function handleInput(event) {
         dropdown.style.display = "none";
         return;
     }
-    // Filter names from the database
-    const filteredNames = persArray.filter(person => person.GetName().toLowerCase().includes(input));
+    
+    const filteredNames = persArray.filter(person => 
+        person.GetName().toLowerCase().includes(input) && !guessedNames.has(person.GetName().toLowerCase())
+    );
 
-    // Populate the dropdown with filtered names
     dropdown.innerHTML = "";
     const maxItems = 6; 
     const dropdownList = document.createElement("div");
@@ -188,7 +230,4 @@ export function handleInput(event) {
     dropdown.style.display = filteredNames.length > 0 ? "block" : "none";
 }
 
-
-
 newGame();
-

@@ -24,13 +24,22 @@
         <div id="previousGuesses"></div>
     </div>
 
+    <div class="gameMode">
+        <h3 id="hardMode">Hard mode</h3>
+        <label class="switch">
+            <input type="checkbox" onclick="changeMode()">
+            <span class="slider round"></span>
+        </label>
+    </div>
+
     <script type="module">
-        import { handleInput, checkName, newGame } from './render.js';
+        import { handleInput, checkName, newGame, changeMode } from './render.js';
 
         // This makes the imported functions available in the global scope
         window.handleInput = handleInput;
         window.checkName = checkName;
         window.newGame = newGame;
+        window.changeMode = changeMode;
     </script>
 </body>
 </html>
